@@ -34,3 +34,8 @@
 	<li>Lines 1..Q: Each line contains a single integer that is an answer to an input query and tells the difference in height between the tallest and shortest cow in the input range.</li>
 </ul>
 
+### 아이디어
+1. max,min 트리,쿼리에 관한 로직을 작성해 문제를 해결했다.
+
+### 개선할 점
+3. 매번 max,min 쿼리를 호출하는 방식을 하나의 쿼리에서 해결할 수 있는 방식을 고민해봐야겠다.
