@@ -1,53 +1,49 @@
 import sys
-input=sys.stdin.readline
+input = sys.stdin.readline
 sys.setrecursionlimit(10**5)
 
 class Node:
-    def __init__(self,root,left,right):
-        self.root=root
-        self.left=left
-        self.right=right
+    def __init__(self,data,left,right):
+        self.data = data
+        self.left = left
+        self.right = right
+
+def set_node(data,root):
+    if data < root:
+        if tree[root].left == -1:
+            tree[root].left = data
+            tree[data] = Node(data,-1,-1)
+        else:
+            set_node(data,tree[root].left)
+    elif data > root:
+        if tree[root].right == -1:
+            tree[root].right = data
+            tree[data] = Node(data, -1, -1)
+        else:
+            set_node(data,tree[root].right)
 
 def postorder(node):
-    if node==None:
-        return
-    postorder(node.left)
-    postorder(node.right)
-    print(node.root)
+    if node.left != -1:
+        postorder(tree[node.left])
+    if node.right != -1:
+        postorder(tree[node.right])
+    print(node.data)
 
-def find_idx(preorder,pstart,root,size):
-    i=pstart
-    count=0
-    while count<size:
-        if root>=preorder[i]:
-            count+=1
-            i+=1
-        else:
-            return i
-    return -1
+if __name__=="__main__":
+    global tree
+    tree = {}
+    preorder = []
 
-def find_tree(preorder,pstart,size):
-    if size<=0:
-        return None
-    root=preorder[pstart]
-    idx=find_idx(preorder,pstart,root,size)
-    if idx==-1:
-        leftsize=size-1
-        rightsize=0
-    else:
-        leftsize = idx - pstart - 1
-        rightsize = size - leftsize - 1
-    left=find_tree(preorder,pstart+1,leftsize)
-    right=find_tree(preorder,idx,rightsize)
-    return Node(root=root,left=left,right=right)
-
-if __name__=='__main__':
-    preorder=[]
     while True:
         try:
-            num=int(input())
-            preorder.append(num)
+            preorder.append(int(input()))
         except:
             break
-    tree=find_tree(preorder,0,len(preorder))
-    postorder(tree)
+
+    l = len(preorder)
+    root = preorder[0]
+    tree[root] = Node(root,-1,-1)
+
+    for i in range(1,l):
+        set_node(preorder[i],root)
+    postorder(tree[root])
