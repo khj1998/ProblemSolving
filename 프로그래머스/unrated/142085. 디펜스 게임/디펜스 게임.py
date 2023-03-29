@@ -3,17 +3,20 @@ import heapq
 def solution(n, k, enemy):
     answer = 0
     q = []
-    total_enemy = 0
     
-    for e in enemy:
-        total_enemy += e
+    for e_num in enemy:
+        n -= e_num
         
-        if total_enemy <= n:
-            heapq.heappush(q,-e)
+        if n<0:
+            if k == 0:
+                break
+            else:
+                num = heapq.heappushpop(q,-e_num)
+                n -= num
+                k-=1
+                answer+=1
+        else:
+            heapq.heappush(q,-e_num)    
             answer+=1
-        elif k > 0:
-            total_enemy += heapq.heappushpop(q,-e)
-            k-=1
-            answer+=1
-        
+    
     return answer
