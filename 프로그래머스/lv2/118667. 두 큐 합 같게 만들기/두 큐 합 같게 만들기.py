@@ -12,7 +12,7 @@ def solution(queue1, queue2):
         if sum1==sum2:
             return answer
         
-        if answer>=1000000:
+        if answer>=600000:
             break
         
         if sum1>sum2:
