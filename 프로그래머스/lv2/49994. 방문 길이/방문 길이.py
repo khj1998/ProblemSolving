@@ -2,7 +2,6 @@ def solution(dirs):
     answer = 0
     path = []
     x,y = 0,0
-    temp = [1,2,3,4]
     
     for d in dirs:
         start_x,start_y = x,y
