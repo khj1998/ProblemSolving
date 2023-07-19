@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 def solution(numbers):
     answer = [-1]*(len(numbers))
     stack = []
