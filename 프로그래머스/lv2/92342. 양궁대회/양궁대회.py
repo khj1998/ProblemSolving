@@ -3,19 +3,19 @@ from itertools import combinations_with_replacement
 def solution(n, info):
     answer = []
     score = [i for i in range(11)]
-    lion_score_list = list(combinations_with_replacement(score,n))
+    arrows = list(combinations_with_replacement(score,n))
     
-    for s_list in lion_score_list:
+    for arrow in arrows:
         lion,apiche = 0,0
         temp = [0 for i in range(11)]
         
-        for i in s_list:
-            temp[i] += 1
+        for a in arrow:
+            temp[a] += 1
         
         for i in range(10):
             if temp[i] > info[i]:
                 lion += (10-i)
-            elif info[i] > 0:
+            elif info[i] > 0 and info[i] >= temp[i]:
                 apiche += (10-i)
         
         if lion > apiche:
