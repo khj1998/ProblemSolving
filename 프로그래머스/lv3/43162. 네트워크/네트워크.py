@@ -1,23 +1,25 @@
-def dfs(x,check,graph):
-    check[x] = True
+def find(parent,x):
+    if x!=parent[x]:
+        parent[x] = find(parent,parent[x])
+    return parent[x]
+
+def union(parent,x,y):
+    x = find(parent,x)
+    y = find(parent,y)
     
-    for y in graph[x]:
-        if not check[y]:
-            dfs(y,check,graph)
+    if x > y:
+        parent[x] = y
+    else:
+        parent[y] = x
 
 def solution(n, computers):
     answer = 0
-    check = [False]*n
-    graph=[[] for _ in range(n)]
+    dic = {}
+    parent = [i for i in range(n)]
     
     for i in range(n):
         for j in range(n):
-            if i!=j and computers[i][j] == 1:
-                graph[i].append(j)
+            if computers[i][j] and find(parent,i)!=find(parent,j):
+                union(parent,i,j)
     
-    for i in range(n):
-        if not check[i]:
-            dfs(i,check,graph)
-            answer+=1
-    
-    return answer
+    return len(set([find(parent, i) for i in range(n)]))
