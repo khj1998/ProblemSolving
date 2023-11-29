@@ -1,49 +1,37 @@
 import sys
 input = sys.stdin.readline
 
-def find_root(node_list):
-    ans = -1
-    l = len(node_list)
-    for node_num in range(l):
-        if node_list[node_num] == -1:
-            ans = node_num
-            break;
-    return ans
+N = int(input())
+nodes = list(map(int,input().split()))
+del_node = int(input())
+start = -1
+tree = {}
+answer = []
 
-def init_tree(tree,node_list):
-    l = len(node_list)
-    for node_num in range(l):
-        if node_list[node_num] == -1:
-            continue
-        else:
-            tree[node_num].append(node_list[node_num])
-            tree[node_list[node_num]].append(node_num)
+for i in range(N):
+    tree[i] = []
 
-def get_leaf_node(root):
-    check[root] = True
-    has_child = False
+for idx,node in enumerate(nodes):
+    if node == -1:
+        start = idx
+        continue
 
-    for child in tree[root]:
-        if child==del_node:
-            continue
-        elif check[child] == False:
-            has_child = True
-            get_leaf_node(child)
+    if idx == del_node or node == del_node:
+        continue
 
-    if not has_child:
-        ans_list.append(root)
+    tree[node].append(idx)
 
-if __name__=="__main__":
-    N = int(input())
-    ans_list = []
-    tree = [[] for _ in range(N)]
-    check = [False]*N
-    node_list = list(map(int,input().split()))
-    del_node = int(input())
-    init_tree(tree,node_list)
-    root = find_root(node_list)
-    if del_node == root:
-        print(0)
-    else:
-        get_leaf_node(root)
-        print(len(ans_list))
+def find_leaf(start):
+    if not tree[start]:
+        answer.append(start)
+        return
+
+    for y in tree[start]:
+        find_leaf(y)
+
+find_leaf(start)
+
+if del_node == start:
+    print(0)
+else:
+    print(len(answer))
