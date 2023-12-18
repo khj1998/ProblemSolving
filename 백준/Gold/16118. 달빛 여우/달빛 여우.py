@@ -42,7 +42,7 @@ def get_wolf_distance(start):
     while q:
         dist,is_double,now = heapq.heappop(q)
 
-        if wolf_distance[now][is_double] != dist:
+        if wolf_distance[now][is_double] < dist:
             continue
 
         for next,cost in tree[now]:
