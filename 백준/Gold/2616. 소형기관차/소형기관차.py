@@ -1,17 +1,17 @@
 import sys
 input = sys.stdin.readline
 
-n = int(input())
+N = int(input())
 array = [0] + list(map(int,input().split()))
-m = int(input())
-array_sum = [0]*(n+1)
-dp = [[0]*(n+1) for _ in range(4)]
+dp = [[0]*(N+1) for _ in range(4)]
 
-for i in range(1,n+1):
-    array_sum[i] = array[i] + array_sum[i-1]
+for i in range(2,N+1):
+    array[i] += array[i-1]
+
+M = int(input())
 
 for i in range(1,4):
-    for j in range(m,n+1):
-        dp[i][j] = max(dp[i][j-1],dp[i-1][j-m]+array_sum[j]-array_sum[j-m])
+    for j in range(M,N+1):
+        dp[i][j] = max(dp[i][j-1],dp[i-1][j-M] + array[j] - array[j-M])
 
-print(dp[3][n])
+print(dp[3][N])
