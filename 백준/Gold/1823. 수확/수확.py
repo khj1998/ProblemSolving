@@ -1,26 +1,25 @@
 import sys
 input = sys.stdin.readline
-sys.setrecursionlimit(10**4)
+sys.setrecursionlimit(10000)
 
 N = int(input())
 dp = [[0]*N for _ in range(N)]
-rice_value = []
+values = []
 
 for _ in range(N):
-    rice_value.append(int(input()))
+    values.append(int(input()))
 
-def get_dp(start,end,cnt):
-    if start > end:
+def recursive(left,right,cnt):
+    if right < left:
         return 0
+    elif dp[left][right]:
+        return dp[left][right]
 
-    if dp[start][end]:
-        return dp[start][end]
+    dp[left][right] = max(cnt*values[left] + recursive(left+1,right,cnt+1),
+                          cnt*values[right] + recursive(left,right-1,cnt+1))
 
-    dp[start][end] = max(cnt*rice_value[start] + get_dp(start+1,end,cnt+1),
-                         cnt*rice_value[end] + get_dp(start,end-1,cnt+1))
+    return dp[left][right]
 
-    return dp[start][end]
-
-get_dp(0,N-1,1)
+recursive(0,N-1,1)
 
 print(dp[0][N-1])
