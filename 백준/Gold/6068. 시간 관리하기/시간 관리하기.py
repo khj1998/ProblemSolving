@@ -2,31 +2,26 @@ import sys
 input = sys.stdin.readline
 
 N = int(input())
-array = []
+times = []
+start_time = 0
 
 for _ in range(N):
-    T,S = map(int,input().split())
-    array.append((T,S))
+    t,s = map(int,input().split())
+    times.append((t,s))
 
-array.sort(key = lambda x:-x[1])
+times.sort(key = lambda x:-x[1])
+start_time = times[0][1] - times[0][0] + 1
 
-end_time = array[0][1]
-start_time = array[0][1] - array[0][0] + 1
+for i in range(1,N):
+    time,end_time = times[i]
 
-for i in range(1,len(array)):
-    t,s = array[i]
-
-    if s >= start_time:
-        end_time = start_time - 1
+    if end_time < start_time:
+        start_time = end_time - time + 1
     else:
-        end_time = s
+        end_time = start_time - 1
+        start_time = end_time - time + 1
 
-    start_time = end_time - t + 1
-
-    if start_time < 0:
-        break
-
-if start_time - 1 < 0:
+if start_time < 1:
     print(-1)
 else:
     print(start_time - 1)
