@@ -5,37 +5,31 @@ N = int(input())
 ans = -1
 array = list(map(int,input().split()))
 
+for i in range(1,N):
+    array[i] += array[i-1]
+
 def solution(index):
     result = 0
     temp_value = 0
     if index == 0: # 꿀통이 왼쪽에 있을때
-        result += (sum(array) - array[N-1])
+        result += (array[N-1] - (array[N-1] - array[N-2]))
 
         for i in range(1,N-1):
-            temp = 0
-            for j in range(i):
-                temp += array[j]
-
-            temp_value = max(temp_value,temp - array[i])
+            temp = array[i-1]
+            temp_value = max(temp - (array[i] - array[i-1]) , temp_value)
 
         result += temp_value
     elif index == N-1: # 꿀통이 오른쪽에 있을때
-        result += (sum(array) - array[0])
+        result += (array[N-1] - array[0])
 
         for i in range(1,N-1):
-            temp = 0
-            for j in range(i+1,N):
-                temp += array[j]
-
-            temp_value = max(temp_value, temp - array[i])
+            temp = array[N-1] - array[i]
+            temp_value = max(temp - (array[i] - array[i-1]),temp_value)
 
         result += temp_value
     else: # 나머지 위치에 있을때
-        for j in range(1,index+1):
-            result += array[j]
-
-        for j in range(index,N-1):
-            result += array[j]
+        result += (array[index] - array[0])
+        result += (array[N-2] - array[index-1])
 
     return result
 
