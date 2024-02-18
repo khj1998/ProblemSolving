@@ -1,23 +1,19 @@
 import sys
 input = sys.stdin.readline
-import heapq
 
 N = int(input())
 K = int(input())
+ans = 0
 array = list(map(int,input().split()))
 array.sort()
+stack = []
 
-if len(array) <= K:
-    print(0)
-else:
-    sensor_dist = []
+for i in range(N-1):
+    stack.append(abs(array[i+1] - array[i]))
 
-    for i in range(1,len(array)):
-        sensor_dist.append(array[i] - array[i-1])
+stack.sort()
 
-    sensor_dist.sort()
+for i in range(len(stack)-(K-1)):
+    ans += stack[i]
 
-    for _ in range(K-1):
-        sensor_dist.pop()
-
-    print(sum(sensor_dist))
+print(ans)
