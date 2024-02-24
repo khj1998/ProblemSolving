@@ -7,6 +7,14 @@ ans = -INF
 operations = str(input()).rstrip()
 oper_num = N//2
 
+def calculate(num1,oper,num2):
+    if oper == '-':
+        return num1 - num2
+    elif oper == '+':
+        return num1 + num2
+    else:
+        return num1 * num2
+
 if N == 1:
     print(int(operations[0]))
 else:
@@ -17,7 +25,7 @@ else:
 
         for index, c in enumerate(bin_string, start=1):
             index *= 2
-            oper, num, value = operations[index - 1], operations[index], 0
+            oper, num = operations[index - 1], operations[index]
 
             if c == '0':
                 is_used = False
@@ -30,22 +38,10 @@ else:
                 is_used = True
 
                 if not stack:
-                    if oper == '+':
-                        value = int(operations[0]) + int(num)
-                    elif oper == '-':
-                        value = int(operations[0]) - int(num)
-                    else:
-                        value = int(operations[0]) * int(num)
-                    stack.append(value)
+                    stack.append(calculate(int(operations[0]),oper,int(num)))
                 else:
                     last_num = int(stack.pop())
-                    if oper == '+':
-                        value = last_num + int(num)
-                    elif oper == '-':
-                        value = last_num - int(num)
-                    else:
-                        value = last_num * int(num)
-                    stack.append(value)
+                    stack.append(calculate(last_num,oper,int(num)))
             elif c == '1' and is_used:
                 is_valid = False
                 break
@@ -55,13 +51,8 @@ else:
 
             while stack:
                 op = stack.pop(0)
+                result = calculate(result,op,int(stack.pop(0)))
 
-                if op == '+':
-                    result += int(stack.pop(0))
-                elif op == '-':
-                    result -= int(stack.pop(0))
-                elif op == '*':
-                    result *= int(stack.pop(0))
             ans = max(ans, result)
 
     print(ans)
