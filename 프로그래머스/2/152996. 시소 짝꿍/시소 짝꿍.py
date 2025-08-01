@@ -2,22 +2,24 @@ from collections import Counter
 
 def solution(weights):
     answer = 0
-    weights = Counter(weights)
-    rate = [2/3,2/4,3/4]
+    counter = Counter(weights)
     
-    for key in weights.keys():
-        if weights[key] > 1:
-            n = weights[key]
-            answer += (n*(n-1))//2
+    for w in counter:
+        if counter[w] > 1:
+            answer += (counter[w] * (counter[w]-1))/2
     
-    weights_set = set(weights)
+    unique_weight = list(counter.keys())
     
-    for w in weights_set:
-        if w*rate[0] in weights_set:
-            answer += (weights[w*rate[0]] * weights[w])
-        if w*rate[1] in weights_set:
-            answer += (weights[w*rate[1]] * weights[w])
-        if w*rate[2] in weights_set:
-            answer += (weights[w*rate[2]] * weights[w])
-
+    for w in unique_weight:
+        #2,3
+        if (w * 3)/2 in unique_weight:
+            answer+= counter[w] * counter[(w*3)/2]
+        #2,4
+        if (w * 4)/2 in unique_weight:
+            answer+= counter[w] * counter[(w*4)/2]
+        
+        #3,4
+        if (w * 4)/3 in unique_weight:
+            answer+= counter[w] * counter[(w*4)/3]
+    
     return answer
