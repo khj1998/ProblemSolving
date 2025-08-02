@@ -2,41 +2,57 @@ from collections import defaultdict
 import math
 
 def solution(fees, records):
-    answer = []
-    dic = defaultdict(list)
+    ans = []
+    base_time = int(fees[0])
+    base_fee = int(fees[1])
+    unit_time = int(fees[2])
+    unit_fee = int(fees[3])
     
-    for r in records:
-        r = r.split(' ')
-        time = int(r[0][0:2]) * 60 + int(r[0][3:])
-        
-        if r[1] not in dic.keys():
-            dic[r[1]] = [time]
-        else:
-            dic[r[1]].append(time)
+    car_record = defaultdict(list)
+    car_nums = set()
     
-    for key in dic.keys():
-        max_time = 23*60 + 59
-        start_time = 0
-        total_time = 0
-        for i in range(len(dic[key])):
-            if i%2==0:
-                start_time = dic[key][i]
-            else:
-                total_time += dic[key][i] - start_time
-        
-        if len(dic[key])%2 == 1:
-            total_time += (max_time - dic[key][-1])
-        
-        total_fees = 0
-        
-        if total_time <= fees[0]:
-            total_fees = fees[1]
-        else:
-            total_fees = fees[1] + math.ceil((total_time-fees[0])/fees[2])*fees[3]
-        
-        answer.append((int(key),total_fees))
+    for record in records:
+        time,car_num,in_out = record.split(' ')
+        car_record[car_num].append([in_out,time])
+        car_nums.add(car_num)
     
-    answer.sort()
-    ans = [j for i,j in answer]
+    def calculate_total_times(last_start_time,end_time):
+        if end_time == 'NONE':
+            last_time = 23*60 +59
+            start_time = int(last_start_time[0:2])*60 + int(last_start_time[3:])
+            return last_time - start_time
+        
+        start_time = int(last_start_time[0:2])*60 + int(last_start_time[3:])
+        end_time = int(end_time[0:2])*60 + int(end_time[3:])
+        
+        return end_time - start_time  
     
-    return ans
+    def calculate_total_fees(total_times):
+        if (total_times) <= base_time:
+            return base_fee
+        
+        unit_time = int(fees[2])
+        unit_fee = int(fees[3])
+        additional_fee = math.ceil(((total_times - base_time) / unit_time)) * unit_fee
+        
+        return base_fee + additional_fee
+    
+    for car_num in car_nums:
+        last_in_out = []
+        last_start_time = ''
+        total_times = 0
+        
+        for idx,(in_out,time) in enumerate(car_record[car_num],start = 0):
+            if in_out == 'IN':
+                if idx == len(car_record[car_num]) - 1:
+                    total_times += calculate_total_times(time,'NONE')
+                else:
+                    last_start_time = time
+                continue
+            elif in_out == 'OUT':
+                total_times += calculate_total_times(last_start_time,time)
+        
+        total_fees = calculate_total_fees(total_times)
+        ans.append([car_num,total_fees])
+    
+    return [fee for car_num, fee in sorted(ans, key=lambda x: x[0])]
