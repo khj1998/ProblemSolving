@@ -1,50 +1,45 @@
 def solution(coin, cards):
+    answer = 1
     n = len(cards)
-    my_cards = set(cards[:n//3])
-    pending_cards = set()
-    round = 1
-    target = len(cards) + 1
-    deck_idx = n // 3
+    target = n+1
+    now_index = n//3
+    now_card_list = cards[:now_index]
+    pending_card_list = []
     
-    while deck_idx < n:
-        pending_cards.add(cards[deck_idx])
-        pending_cards.add(cards[deck_idx+1])
-        deck_idx += 2
-
-        found_pair = False
-        for card in list(my_cards):
-            if target - card in my_cards:
-                my_cards.remove(card)
-                my_cards.remove(target - card)
-                found_pair = True
+    while now_index < n:
+        flag = False
+        pending_card_list.append(cards[now_index])
+        pending_card_list.append(cards[now_index+1])
+        
+        now_index+=2
+        
+        for card in now_card_list:
+            if (target - card) in now_card_list:
+                now_card_list.remove(card)
+                now_card_list.remove(target-card)
+                flag = True
                 break
-        if found_pair:
-            round += 1
+            
+        if not flag and coin >= 1:
+            for card in now_card_list:
+                if target - card in pending_card_list:
+                    coin-=1
+                    now_card_list.remove(card)
+                    pending_card_list.remove(target-card)
+                    flag = True
+                    break
+        
+        if not flag and coin > 1:
+            for card in pending_card_list:
+                if target-card in pending_card_list:
+                    coin-=2
+                    pending_card_list.remove(card)
+                    pending_card_list.remove(target-card)
+                    flag = True
+                    break
+        
+        if flag:
+            answer+=1
             continue
-
-        if coin >= 1:
-            for card in list(my_cards):
-                if target - card in pending_cards:
-                    my_cards.remove(card)
-                    pending_cards.remove(target - card)
-                    coin -= 1
-                    found_pair = True
-                    break
-            if found_pair:
-                round += 1
-                continue
-        
-        if coin >= 2:
-            for card in list(pending_cards):
-                if target - card in pending_cards:
-                    pending_cards.remove(card)
-                    pending_cards.remove(target - card)
-                    coin -= 2
-                    found_pair = True
-                    break
-            if found_pair:
-                round += 1
-                continue
         break
-        
-    return round
+    return answer
